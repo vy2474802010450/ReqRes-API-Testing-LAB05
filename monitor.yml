@@ -1,0 +1,46 @@
+
+name: ReqRes API Monitor
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Monitor ReqRes API
+        env:
+          REQRES_API_KEY: ${{ secrets.REQRES_API_KEY }}
+        run: |
+          if [ -z "$REQRES_API_KEY" ]; then
+            echo "REQRES_API_KEY is missing"
+            exit 1
+          fi
+
+          curl --silent --show-error \
+            --output response.json \
+            --write-out '%{http_code} %{time_total}' \
+            --header "x-api-key: $REQRES_API_KEY" \
+            'https://reqres.in/api/users?page=1' > result.txt
+
+          read STATUS TIME < result.txt
+          echo "HTTP status: $STATUS"
+          echo "Response time: ${TIME}s"
+
+          if [ "$STATUS" != "200" ]; then
+            echo "FAIL: HTTP status is not 200"
+            exit 1
+          fi
+
+          if ! awk -v t="$TIME" 'BEGIN {exit !(t < 0.8)}'; then
+            echo "FAIL: Response time is 800ms or more"
+            exit 1
+          fi
+
+          echo "PASS: API status 200 and response time under 800ms"
