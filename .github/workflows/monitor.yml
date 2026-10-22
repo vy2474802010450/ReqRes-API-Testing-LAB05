@@ -19,17 +19,27 @@ jobs:
           REQRES_API_KEY: ${{ secrets.REQRES_API_KEY }}
         run: |
           if [ -z "$REQRES_API_KEY" ]; then
-            echo "REQRES_API_KEY is missing"
+            echo "ERROR: REQRES_API_KEY is missing"
             exit 1
           fi
 
           curl --silent --show-error \
             --output response.json \
-            --write-out '%{http_code} %{time_total}' \
+            --write-out '%{http_code} %{time_total}\n' \
             --header "x-api-key: $REQRES_API_KEY" \
             'https://reqres.in/api/users?page=1' > result.txt
 
+          CURL_EXIT=$?
+
+          if [ "$CURL_EXIT" -ne 0 ]; then
+            echo "FAIL: curl failed with code $CURL_EXIT"
+            exit 1
+          fi
+
+          cat result.txt
+
           read STATUS TIME < result.txt
+
           echo "HTTP status: $STATUS"
           echo "Response time: ${TIME}s"
 
