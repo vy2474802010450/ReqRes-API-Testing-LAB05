@@ -1,0 +1,34 @@
+{
+	"id": "e1f1f996-2bc4-4142-920d-b97d5a6fb3cd",
+	"name": "2474802010450_TranNguyenKyVy_ReqRes_Env",
+	"values": [
+		{
+			"key": "baseUrl",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "userId",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "userToken",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "apiKey",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		}
+	],
+	"color": null,
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2026-10-22T13:02:18.625Z",
+	"_postman_exported_using": "Postman/12.33.3-261022-0328"
+}
